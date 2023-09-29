@@ -24,6 +24,30 @@ export default class World {
     document.querySelector("#btnLoad").addEventListener("click", () => {
       this.load();
     });
+
+    // when an island is clicked, call function remove()
+    this.islandsContainer = document.querySelector("#app");
+
+    // Attach a single click event listener to the container
+    this.islandsContainer.addEventListener("click", (event) => {
+      // Check if the clicked element has the "island" class
+      if (event.target.classList.contains("island")) {
+        // Find the index of the clicked island in the this.islands array
+        const indexToRemove = this.islands.findIndex((islandData) => {
+          return islandData.name === event.target.innerText;
+        });
+
+        // If the island is found in the array, remove it
+        if (indexToRemove !== -1) {
+          const islandToRemove = this.islands[indexToRemove];
+          this.islands.splice(indexToRemove, 1); // Remove from array
+
+          // Call the remove function with the clicked island element
+          console.log("Island removed");
+          island.removeIsland(event.target);
+        }
+      }
+    });
   }
 
   save() {
@@ -82,16 +106,13 @@ export default class World {
       name = island.getRandomName();
     }
 
-    // add the islands to the DOM
-    console.log(color, name);
-
     // create a div with class island
     let div = document.createElement("div");
     div.classList.add("island");
     div.style.backgroundColor = color;
     div.innerText = name;
-    // append to body
-    document.querySelector("body").appendChild(div);
+    // append to #app
+    document.querySelector("#app").appendChild(div);
 
     // add the island to the array
     this.islands.push({ color, name });

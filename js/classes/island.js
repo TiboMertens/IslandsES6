@@ -5,9 +5,22 @@ export default class Island {
     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
   }
 
-  remove() {
-    // JS animations api, fade out
-    // remove the element when the animation ended
+  removeIsland(island) {
+    // Create a fade-out animation
+    island.animate(
+      [
+        { opacity: 1 }, // Start with full opacity
+        { opacity: 0 }, // End with completely transparent
+      ],
+      {
+        duration: 1000, // Duration of the animation in milliseconds
+        fill: "forwards", // Keep the final style of the animation
+      }
+    ).onfinish = () => {
+      // Remove the island from the DOM after the animation ends
+      console.log("Island removed");
+      island.remove();
+    };
   }
 
   getRandomName() {
