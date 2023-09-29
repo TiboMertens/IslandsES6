@@ -48,10 +48,23 @@ export default class World {
         div.innerText = naam;
         //append to body
         document.querySelector('body').appendChild(div);
+        this.moveIsland(div);
     }
   
     moveIsland(island) {
       // this might be a good point to animate the islands with JS Animations API
+      // get random coordinates
+      let coords = this.getCoordinates();
+      // use js web animations api to animate div to these coords
+      island.animate([
+        {transform: `translate(0px, 0px)`},
+        {transform: `translate(${coords.x}px, ${coords.y}px)`}
+
+    ], {
+        duration: 1000,
+        iterations: 1,
+        fill: "forwards"
+    });
     }
   }
   
