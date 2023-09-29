@@ -14,16 +14,56 @@ export default class World {
     document.querySelector("#btnAddIsland").addEventListener("click", () => {
       this.addIsland(island);
     });
+
+    // when btnSave is clicked, call function save()
+    document.querySelector("#btnSave").addEventListener("click", () => {
+      this.save();
+    });
+
+    // when btnLoad is clicked, call function load()
+    document.querySelector("#btnLoad").addEventListener("click", () => {
+      this.load();
+    });
   }
 
   save() {
     // save array islands to localstorage as string
     // loop over all this.islands and save the names
+    const savedIslands = this.islands.map((islandData) => {
+      return {
+        color: islandData.color,
+        name: islandData.name,
+      };
+    });
+
+    localStorage.setItem("islands", JSON.stringify(savedIslands));
   }
 
   load() {
     // load islands from localstorage into array
     // loop over the array and addIslands()
+    const savedIslands = JSON.parse(localStorage.getItem("islands"));
+
+    if (savedIslands) {
+      // Clear existing islands from the DOM
+      this.clearIslandsFromDOM();
+
+      // Loop over the saved islands and add them back
+      savedIslands.forEach((islandData) => {
+        this.addIsland(islandData.color, islandData.name);
+      });
+    }
+  }
+
+  clearIslandsFromDOM() {
+    // Remove all islands from the DOM
+    const islandsInDOM = document.querySelectorAll(".island");
+    islandsInDOM.forEach((island) => {
+      island.remove();
+    });
+
+    // Clear the islands array
+    this.islands = [];
   }
 
   getCoordinates() {
@@ -35,19 +75,27 @@ export default class World {
     };
   }
 
-  addIsland(island) {
+  addIsland(color, name) {
+    if (!color || !name) {
+      // If color and name are not provided, generate random ones
+      color = island.getRandomColor();
+      name = island.getRandomName();
+    }
+
     // add the islands to the DOM
-    let color = island.getRandomColor();
-    let naam = island.getRandomName();
-    console.log(color, naam);
+    console.log(color, name);
 
     // create a div with class island
     let div = document.createElement("div");
     div.classList.add("island");
     div.style.backgroundColor = color;
-    div.innerText = naam;
-    //append to body
+    div.innerText = name;
+    // append to body
     document.querySelector("body").appendChild(div);
+
+    // add the island to the array
+    this.islands.push({ color, name });
+
     this.moveIsland(div);
   }
 
